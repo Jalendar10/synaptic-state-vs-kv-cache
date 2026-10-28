@@ -60,8 +60,7 @@ evaluation protocol, matched on parameters, tokens, and compute, that reports ac
 jointly. We report no large-scale results: the contribution is the framework, the analysis, four falsifiable
 hypotheses, and the protocol needed to test them. A CPU pilot of the capacity track, at toy widths $n\le4096$ with
 synthetic keys and no trained encoder, only characterises regimes: a raw positive Hebbian state plateaus; centred
-Hebbian and delta-rule states with random keys scale with fitted exponents $0.86$--$0.94$; and correlated or clustered
-keys at fixed correlation give flat capacity, which is a different regime from the $\sqrt n$ worst case.
+Hebbian and delta-rule states with random keys give fitted exponents $0.86$--$0.94$; and keys whose shared structure the write rule cannot remove (fixed-correlation keys under the raw rule, strongly correlated keys under the delta rule, or clustered keys) give flat capacity, a different regime from the $\widetilde{\Omega}(\sqrt{n})$ worst case.
 \end{abstract}
 
 % ==================================================================
@@ -711,7 +710,7 @@ $N_{50}$ is log-linearly interpolated, and the slope is a least-squares fit of $
 (3 seeds; about 41\,s on 8 CPU threads).
 \begin{table}[h]
 \centering\small
-\caption{P5 [PILOT] $N_{50}$ (mean over 3 seeds) and fitted exponent ($\pm$ s.e.). ``--'': not run (delta at $n=4096$).}
+\caption{P5 [PILOT] $N_{50}$ (mean over 3 seeds) and fitted exponent ($\pm$ s.e.). ``--'': not run (delta at $n=4096$). Where noted, delta $n{=}2048$ uses $2/3$ seeds.}
 \label{tab:p5}
 \begin{tabular}{@{}llrrrrrl@{}}
 \toprule
@@ -731,7 +730,7 @@ delta & clustered & 36 & 43 & 37 & 35 & -- & $0.05\pm0.08$ (flat) \\
 \bottomrule
 \end{tabular}
 \end{table}
-\emph{Reading (regime characterisation only).} Every curve has an exponent near 1 or near 0. Which one appears
+\emph{Reading (regime characterisation only).} Every curve has an exponent near $1$, or $\le 0.3$. Which one appears
 depends on whether the write rule can remove the key-correlation structure. A single shared direction is removed
 by centring, at a constant-factor cost of $2$--$4.5\times$. Several shared directions (clustered keys) are not
 removed, and neither is $\rho=0.8$ under the delta rule. Because $\rho$ is held fixed as $n$ grows, the flat curves

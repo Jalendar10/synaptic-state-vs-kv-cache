@@ -47,7 +47,7 @@ style from https://github.com/JmlrOrg/tmlr-style-file (commit 7bf90ef, 2023-06-3
 - **Kept intact:** Definition 1 and the unified operator table. **Proposition 1** now has a full short proof (the rounding is explicit) instead of a "proof sketch". The **CDLR specification** (fast state, consolidation κ, gated reads, workspace, adapter, audit, training/complexity) and H1–H4 are kept. So are the **critique table** (Table 2, unchanged content) and **protocol tracks E1–E5**, plus the compute envelope.
 - **New conceptual TikZ figures (no results):**
   - Fig. 1: closed-form byte crossover T★ = nd/(2 d_model). KV-cache vs. BDH-GPU state, with T★ ≈ 5.46k, and the CDLR M=1 crossover ≈ 10.9k. Only Eq. 1 is plotted.
-  - Fig. 3: the E3 ablation ladder (a)→(i), with the byte-transfer and backbone controls.
+  - Fig. 4: the E3 ablation ladder (a)→(i), with the byte-transfer and backbone controls. (Fig. 3 is the E2 N50 PILOT.)
 - **Probes demoted:** "Preliminary Smoke Tests (Not Main Results)" sit in Appendix A only. The main text points to them once, in Scope.
 - Removed the "NeurIPS checklist" phrasing (the citation is kept), the keywords line, and all venue names from the body.
 - Code availability now points to the anonymized supplementary material.
@@ -61,7 +61,7 @@ The PDF was rebuilt with `latexmk -pdf` (exit 0, 15 pp, no undefined refs). Anon
 | S1 | Every empirical claim is limited to **regime characterisation at toy n ≤ 4096** (d = 32, synthetic k-WTA keys, closed-set recall, 3 seeds, CPU) | PASS | Abstract (last sentence), Scope ¶, Fig. 3 caption, Remark 2, App. A P5, Limitations (vii) |
 | S2 | Raw positive Hebbian **plateaus** (N50 ≈ 530–600 for n ≥ 512; exponent 0.29 ± 0.07 overall) | PASS, stated | Abstract, Remark 2(a), Fig. 3, Table 3 |
 | S3 | Centred Hebbian and delta with random keys: **slopes 0.86 ± 0.01 / 0.94 ± 0.01** | PASS, stated | Abstract, Remark 2(b), Fig. 3, Table 3 |
-| S4 | Correlated (fixed ρ) and clustered keys are **flat (exponent ≈ 0)**, stated as **≠ the √n regime under fixed ρ**. Not called a refutation of Claim 7 | PASS, stated | Abstract, Remark 2(c), Fig. 3 caption, P5 "Reading" |
+| S4 | Keys whose shared structure the write rule cannot remove (raw fixed-ρ; strongly correlated delta; clustered) are **flat (exponent ≈ 0)**; ≠ √n regime. Centred fixed-ρ is *not* flat (exponents ~0.86–0.88). Not a Claim 7 refutation | PASS after abstract fix 2026-10-28 | Abstract (fixed), Remark 2(c), Fig. 3 caption, P5 |
 | S5 | **No** claim of general Õ(n) or Ω̃(√n) capacity | PASS: explicit disclaimer | Scope ¶ (i), P5 last sentence |
 | S6 | **No** claim of a Transformer-matched (param/token/FLOP) bakeoff result | PASS: explicit disclaimer. P4 (unmatched) is still labelled "supports no ranking" | Scope ¶ (ii), Fig. 3 caption ("no Transformer baseline") |
 | S7 | **No** claim about trained-encoder behaviour | PASS: explicit disclaimer | Scope ¶ (iii), Open problem (1), Limitations (vii) |
