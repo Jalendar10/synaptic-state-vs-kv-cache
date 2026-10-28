@@ -58,7 +58,7 @@ writing them into such a state and then iterating in latent space. We ask a sing
 cost, should inference-time memory be synaptic rather than a cache?} We (i) formalise all three families as
 instances of one associative-memory operator with explicit write, read, forgetting, and workspace maps; (ii) show
 that any single-timescale decaying state couples retention and interference, so it cannot both adapt quickly and
-retain earlier episodes; (iii) propose \emph{Compact Dual-Timescale Latent Reasoning} (\cdlr), which pairs a fast
+retain earlier episodes; (iii) specify \emph{Compact Dual-Timescale Latent Reasoning} (\cdlr), which pairs a fast
 episodic Hebbian state with a slow, gated, consolidated memory bank, a halting latent workspace, a local readout
 adapter, and a built-in audit trail; (iv) critically audit the empirical claims of BDH and BDH-CQ, separating
 paper-stated limits from inferred gaps; and (v) specify a preregistrable, matched-parameter/token/compute
@@ -315,6 +315,9 @@ design principle behind \cdlr.
 
 % ==================================================================
 \section{Compact Dual-Timescale Latent Reasoning (\cdlr)}
+
+\noindent\textit{Specification pending empirical confirmation.}
+Until E3 (including the byte-transfer control) and E4 land, \cdlr{} should be read as a design class and evaluation target, not a demonstrated method.
 \label{sec:method}
 
 \cdlr{} is an architecture \emph{class}, specified by the operator of \cref{def:amo} with both $\kappa$ and
@@ -646,7 +649,7 @@ can be confirmed or refuted. The next step is to run that protocol and report th
 where the KV-cache wins.
 
 \paragraph{Code and data availability.} Protocol code, configurations, and preliminary probe logs will be released
-at \url{https://github.com/Jalendar10/<repo-name>}.
+at \url{https://github.com/Jalendar10/synaptic-state-vs-kv-cache} (commit pinned in the repository; protocol frozen in \texttt{prereg/e1\_e5\_protocol\_v0.json}).
 
 \bibliographystyle{plainnat}
 \bibliography{references}

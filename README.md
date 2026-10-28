@@ -33,6 +33,10 @@ To submit, move the body into the venue template (`iclr20XX_conference.sty`, `ne
 - Not a fit: security venues (ACSAC, CCS).
 Verify each venue's current call, page limits, and anonymity rules before submitting (double-blind: remove the author block and the repo link).
 
+## Preregistration
+
+Frozen protocol (before large-scale runs): [`prereg/e1_e5_protocol_v0.json`](prereg/e1_e5_protocol_v0.json). Experiment order: **E2 → E3 → E4 → E1 → E5**.
+
 ## Honesty rules this draft follows
 - Every number from prior work cites its section/table.
 - (P) paper-stated limitation vs. (I) our inference are always marked.
@@ -40,7 +44,7 @@ Verify each venue's current call, page limits, and anonymity rules before submit
 - No claim of ARC parity, 600B scaling, or closing BDH §7.2.
 
 ## Remote
-GitHub: `https://github.com/Jalendar10/synaptic-state-vs-kv-cache` (placeholder; not pushed from this draft).
+GitHub: `https://github.com/Jalendar10/synaptic-state-vs-kv-cache` (public repo; see `prereg/` for frozen protocol).
 ```bash
 git remote add origin https://github.com/Jalendar10/synaptic-state-vs-kv-cache.git
 ```

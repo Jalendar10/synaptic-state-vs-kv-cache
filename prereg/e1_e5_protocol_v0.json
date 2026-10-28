@@ -1,0 +1,41 @@
+{
+  "paper": "Synaptic State or KV-Cache?",
+  "repo": "https://github.com/Jalendar10/synaptic-state-vs-kv-cache",
+  "prereg_version": "0.1.0",
+  "created_utc": "2026-10-28T03:35:00Z",
+  "status": "preregistered_before_large_scale_runs",
+  "primary_hypotheses": ["H1_capacity_claim7", "H2_dual_timescale_continual", "H3_ablation_vs_linear", "H4_kv_cache_wins_short_context"],
+  "experiment_order": ["E2", "E3", "E4", "E1", "E5"],
+  "E2": {
+    "name": "associative_recall_vs_claim7",
+    "goal": "Falsify or support BDH Claim 7 O~(n) / Omega~(sqrt(n)) capacity and length generalization",
+    "metrics": ["N50(n)", "accuracy_vs_n", "accuracy_vs_key_adversarial"],
+    "success_criteria": "Report measured N50 curves; do not claim Claim 7 confirmed unless intervals match"
+  },
+  "E3": {
+    "name": "ablation_ladder",
+    "required_rungs": ["linear_attn_only", "hebbian_S", "dual_S_plus_C", "byte_transfer_control_larger_S"],
+    "note": "Byte-transfer control required to justify CDLR vs just more state"
+  },
+  "E4": {
+    "name": "continual_A_B_A",
+    "primary_setting": "unsupervised_gate",
+    "ablation": "task_id_oracle_slot",
+    "forbidden": "labelled_support_as_primary"
+  },
+  "E1": {
+    "name": "matched_lm_bakeoff",
+    "architectures": ["transformer_pp", "bdh_gpu", "mamba", "gla_or_gated_deltanet", "linear_attn"],
+    "scales_mparams_first_pass": [30, 125],
+    "scale_optional": [350],
+    "data": {"corpus": "FineWeb-Edu", "dump_hash": "TBD_PIN_BEFORE_RUN", "europarl_replication": true},
+    "seeds": 3,
+    "budget_note": "Start 30M+125M; 350M only if 125M shows signal"
+  },
+  "E5": {
+    "name": "bdh_cq_interface",
+    "mode": "black_box_or_labelled_eqs_1_4_reimpl",
+    "not": "claim_proprietary_parity"
+  },
+  "reporting": ["accuracy", "memory_bytes", "latency_ms", "negative_results_first_class"]
+}
