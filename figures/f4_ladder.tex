@@ -1,0 +1,30 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  rung/.style={draw,rounded corners=2pt,align=center,font=\scriptsize,minimum width=19mm,minimum height=9mm,inner sep=2pt,fill=gray!6},
+  fast/.style={rung,fill=orange!15}, slow/.style={rung,fill=blue!10}, wsr/.style={rung,fill=green!12},
+  ctrl/.style={rung,dashed,fill=white,draw=red!60!black},
+  arr/.style={-{Stealth[length=1.6mm]},thick}]
+\node[rung] (a) at (0,0) {(a) linear attn\\elu$+1$, $d_\phi{=}d$};
+\node[rung] (b) at (2.55,0) {(b) $+$ positive\\ReLU low-rank};
+\node[rung] (c) at (5.1,0) {(c) $+$ high dim.\\$n\gg d$};
+\node[rung] (d) at (7.65,0) {(d) $+$ k-WTA\\sparsity};
+\node[fast] (e) at (10.2,0) {(e) $+$ decay $\lambda$\\/ damping};
+\node[fast] (f) at (10.2,-1.7) {(f) Hebbian\\$\to$ delta};
+\node[slow] (g) at (7.65,-1.7) {(g) $+$ slow bank\\$\Cm$, gate $\kappa$};
+\node[wsr]  (h) at (5.1,-1.7) {(h) $+$ workspace\\$R{>}1$, halting};
+\node[wsr]  (i) at (2.55,-1.7) {(i) $+$ local\\adapter $W$};
+\node[ctrl] (bt) at (7.65,-3.4) {byte-transfer control:\\bank bytes $\to$ larger $\Sm$};
+\node[ctrl] (tb) at (2.55,-3.4) {backbone control:\\Transformer $+$ positive head};
+\draw[arr] (a)--(b); \draw[arr] (b)--(c); \draw[arr] (c)--(d); \draw[arr] (d)--(e);
+\draw[arr] (e)--(f); \draw[arr] (f)--(g); \draw[arr] (g)--(h); \draw[arr] (h)--(i);
+\draw[arr,dashed,red!60!black] (f.south) |- node[pos=0.25,right,font=\scriptsize]{same bytes} (bt.east);
+\draw[{Stealth[length=1.6mm]}-{Stealth[length=1.6mm]},dotted,thick,red!60!black] (g)--node[right,font=\scriptsize,align=left]{compare\\at equal bytes} (bt);
+\draw[arr,dashed,red!60!black] (i)--(tb);
+\end{tikzpicture}
+\caption{E3 ablation ladder. Each rung adds one component at fixed bytes and FLOPs. Grey: linear-attention to
+BDH-GPU-like keys. Orange: fast-state dynamics. Blue: second timescale. Green: workspace and adapter. Dashed red rungs
+are controls. The byte-transfer control gives rung (g)'s bank bytes to a larger fast state $\Sm$, so a gain at
+(g) can be attributed to a second timescale rather than to more memory. The backbone control swaps BDH for a Transformer with a positive head.}
+\label{fig:ladder}
+\end{figure}

@@ -18,6 +18,8 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
 \usepackage[capitalise,noabbrev]{cleveref}
@@ -264,7 +266,9 @@ For the 25M BDH-GPU configuration ($n=32{,}768$, $d=256$; \citealp{kosowski2025b
 $d_{\text{model}}=768$ Transformer, $T^\star\approx5{,}461$ tokens per layer\IN. Below $T^\star$ the bounded state
 is the \emph{larger} memory. This is consistent with, and independent of, the paper's FLOP crossover of about 4096
 tokens at $d=256$ (\S4.2). Constant memory pays off only for long contexts or many concurrent episodes, and fair
-comparisons must report bytes at several $T$ rather than asymptotic class alone (\cref{sec:protocol}).
+comparisons must report bytes at several $T$ rather than asymptotic class alone (\cref{sec:protocol}). \Cref{fig:crossover} plots both.
+
+\input{figures/f2_crossover}
 
 \paragraph{Capacity.} For a linear associative state with $n$-dimensional keys, interference between stored
 items grows with key overlap. BDH Claim~7 (\S6.1; App.~C.2) gives $\tilde O(n)$ separable facts for
@@ -464,7 +468,9 @@ Mamba-2), one gated/delta linear attention (GLA or Gated DeltaNet), plain linear
 width, BDH-GPU from the public code, and \cdlr. xLSTM and Titans where code permits.
 \item \textbf{Joint reporting.} Accuracy (or loss), \emph{memory} = parameter bytes + peak inference-state bytes at
 stated $T$ and batch, and \emph{latency} (p50/p95 at batch~1, plus throughput at saturation) on named hardware.
-Results are Pareto fronts. Single ratios such as accuracy/(KB$\times$ms) may appear only next to the raw numbers.
+Results are Pareto fronts. Single ratios such as accuracy/(KB$\times$ms) may appear only next to the raw numbers. \Cref{fig:pareto} gives the reporting template.
+
+\input{figures/f5_pareto}
 \item \textbf{Statistics.} $\ge3$ seeds (5 where affordable). Proportions get Wilson intervals
 \citep{wilson1927probable}, paired comparisons get exact McNemar tests \citep{mcnemar1947note} or paired bootstrap,
 and multiple comparisons are Holm-corrected.
@@ -491,7 +497,9 @@ and matched state bytes for every model. Keys are drawn i.i.d.\ (non-adversarial
 $\rho_{\text{key}}$ (adversarial-leaning). We fit capacity $N_{50}(n)$, the $N$ at 50\% recall, and test whether
 its exponent is near 1 (random keys) or near $\tfrac12$ (correlated keys). Length generalisation: train at $T$,
 test at $2T$--$16T$ on recall, copying \citep{jelassi2024repeat}, and RULER-style needle tasks
-\citep{hsieh2024ruler}, with BDH's damping (RoPE/ALiBi-like $U$; \citealp{kosowski2025bdh}, \S6.1) ablated.
+\citep{hsieh2024ruler}, with BDH's damping (RoPE/ALiBi-like $U$; \citealp{kosowski2025bdh}, \S6.1) ablated. \Cref{fig:capacity} shows a toy-scale CPU pilot of the capacity sweep.
+
+\input{figures/f3_capacity}
 
 \textbf{E3. Ablation ladder isolating Hebbian and dual-timescale effects.} Each rung adds one component at fixed
 bytes and FLOPs:
@@ -506,7 +514,9 @@ bytes and FLOPs:
 (i) $+$ local adapter.
 A \emph{byte-transfer control} at rung (g) gives the bank's bytes to a larger $\Sm$, so that ``more memory'' and
 ``a second timescale'' are not confounded. A second control replaces the BDH backbone with a Transformer
-backbone plus positive head.
+backbone plus positive head. \Cref{fig:ladder} lays out the ladder.
+
+\input{figures/f4_ladder}
 
 \textbf{E4. Continual streams (H2).} Streams $A\!\to\!B\!\to\!A\!\to\!\dots$ with controlled interference: permuted
 mappings, class-incremental symbol tasks, and a language-domain stream (Europarl language pairs; code$\to$prose).
@@ -687,6 +697,16 @@ vs.\ 0.91 for full BPTT, at about $2.3\times$ lower per-step cost. \emph{Both fo
 comparison is not matched and supports no ranking. In a toy Tiny-\cdlr{} vs.\ Transformer recall comparison, the
 undertrained Transformer was far less accurate (0.25 vs.\ 1.00) but $28\times$ faster and used less memory at
 this context length.
+
+\paragraph{P5: Toy capacity sweep (E2 pilot; \cref{fig:capacity}).} We used a fixed $n\times d$ state ($d=32$, $n=64$--$4096$) with the
+ALRS Hebbian write/read. Keys were positive and k-WTA sparse (active fraction $1/16$), values were Rademacher, and recall was closed-set
+(3 seeds; \texttt{experiments/e2\_capacity/}). For random keys, $N_{50}/n$ at the largest width was 1.75 (centred Hebbian, $n{=}4096$) and 1.31
+(delta rule, $n{=}2048$), with exponents $0.86\pm0.01$ and $0.94\pm0.01$, consistent with $\tilde O(n)$. The \emph{raw} positive
+Hebbian state, which corresponds to BDH-style positive keys without centring, saturated at $N_{50}\approx530$--$600$ for $n\ge512$ (exponent
+$0.29\pm0.07$), because the keys' common-mode overlap does not shrink with $n$. A single shared key direction ($\rho\le0.8$) was removed by
+centring (exponent $\approx0.88$, with a $2$--$4.5\times$ constant loss). Clustered keys, and $\rho{=}0.8$ under the delta rule, were flat
+($N_{50}<90$ at every $n$). No slope-$\tfrac12$ regime appeared. This is a toy check of the memory rule only, with no trained encoder, and it
+neither confirms nor refutes Claim~7.
 
 \section{Reporting Checklist for Architecture Bakeoffs}
 \label{app:checklist}

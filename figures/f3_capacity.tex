@@ -1,0 +1,37 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{loglogaxis}[
+  width=0.82\linewidth, height=6.2cm,
+  xlabel={neuron width $n$}, ylabel={$N_{50}$ (stored facts at 50\% recall)},
+  log basis x=2, xmin=48, xmax=5600, ymin=3, ymax=20000,
+  legend columns=2, legend style={font=\scriptsize,at={(0.5,1.03)},anchor=south,draw=none,/tikz/every even column/.append style={column sep=6pt}},
+  tick label style={font=\footnotesize}, label style={font=\small},
+  every axis plot/.append style={thick,mark size=1.6pt},
+  unbounded coords=discard]
+\addplot[blue!70!black,mark=*] table[x=n,y=hebc_random]{experiments/e2_capacity/n50_plot.dat};
+\addlegendentry{centred Hebbian, random}
+\addplot[teal,mark=square*] table[x=n,y=delta_random]{experiments/e2_capacity/n50_plot.dat};
+\addlegendentry{delta rule, random}
+\addplot[blue!70!black,dashed,mark=o] table[x=n,y=hebc_c05]{experiments/e2_capacity/n50_plot.dat};
+\addlegendentry{centred Hebbian, $\rho{=}0.5$}
+\addplot[red!70!black,mark=triangle*] table[x=n,y=hebbian_random]{experiments/e2_capacity/n50_plot.dat};
+\addlegendentry{raw positive Hebbian, random}
+\addplot[red!70!black,dashed,mark=triangle] table[x=n,y=hebbian_c05]{experiments/e2_capacity/n50_plot.dat};
+\addlegendentry{raw positive Hebbian, $\rho{=}0.5$}
+\addplot[gray,mark=diamond*] table[x=n,y=hebc_clustered]{experiments/e2_capacity/n50_plot.dat};
+\addlegendentry{centred Hebbian, clustered}
+% reference slopes
+\addplot[black,thin,dotted,domain=64:4096,samples=2,forget plot] {2*x};
+\node[font=\scriptsize,rotate=26] at (axis cs:200,620) {slope 1};
+\addplot[black,thin,dashdotted,domain=64:4096,samples=2,forget plot] {12*sqrt(x)};
+\node[font=\scriptsize,rotate=14] at (axis cs:1800,320) {slope $\tfrac12$};
+\end{loglogaxis}
+\end{tikzpicture}
+\caption{E2 toy capacity probe (real points; CPU, $d=32$, k-WTA keys with active fraction $1/16$, 3 seeds; \cref{app:probes}, P5).
+Claim~7 predicts slope $\approx1$ for random keys and $\gtrsim\tfrac12$ in the worst case.
+Fitted exponents: centred Hebbian $0.86\pm0.01$, delta $0.94\pm0.01$ (random keys). The raw positive Hebbian state saturates
+(N$_{50}\approx550$ for $n\ge512$), and clustered keys stay flat. We observed no slope-$\tfrac12$ regime.
+The widths are toy scale ($n\le4096$, vs.\ $32{,}768$ in BDH-GPU), so this does \emph{not} confirm Claim~7.}
+\label{fig:capacity}
+\end{figure}

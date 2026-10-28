@@ -12,7 +12,10 @@ Transformers (Vaswani et al., 2017) keep context in a growing KV-cache. BDH (Kos
 |---|---|
 | `main.tex` | Full paper (article class, compiles without venue style files) |
 | `references.bib` | BibTeX (core four papers + linear attention/SSM, latent reasoning, continual learning/CLS, evaluation) |
-| `main.pdf` | Compiled PDF (17 pp: ~11 pp main text, references, Appendices A–C) |
+| `main.pdf` | Compiled PDF (20 pp: main text with Figs. 1–5, references, Appendices A–C) |
+| `figures/` | TikZ/pgfplots sources: F2 byte crossover, F3 E2 pilot capacity, F4 E3 ladder, F5 Pareto template |
+| `experiments/e2_capacity/` | Toy CPU E2 capacity pilot (script, JSON/CSV results, README); not the preregistered E2 run |
+| `prereg/NOTES.md` | Notes on artefacts added after the frozen prereg |
 | `ABSTRACT.md`, `CONTRIBUTIONS.md` | Repo landing one-pagers |
 | `Makefile` | `make` builds the PDF; `make clean` |
 
@@ -23,7 +26,7 @@ make            # = latexmk -pdf main.tex  (pdflatex + bibtex)
 # or manually:
 pdflatex main && bibtex main && pdflatex main && pdflatex main
 ```
-Requires TeX Live with `natbib`, `tikz`, `booktabs`, `tabularx`, `cleveref`, `enumitem`, `microtype`.
+Requires TeX Live with `natbib`, `tikz`, `booktabs`, `tabularx`, `cleveref`, `enumitem`, `microtype`, `pgfplots`.
 To submit, move the body into the venue template (`iclr20XX_conference.sty`, `neurips_20XX.sty`, or `IEEEtran.cls`) and re-check page limits.
 
 ## Venue strategy (honest)
