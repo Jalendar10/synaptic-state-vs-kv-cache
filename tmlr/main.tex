@@ -58,7 +58,10 @@ bank, a halting latent workspace, a local readout adapter, and an audit trail; (
 BDH and BDH-CQ, separating limitations the authors state from gaps we infer; and (v)~give a preregistered
 evaluation protocol, matched on parameters, tokens, and compute, that reports accuracy, memory, and latency
 jointly. We report no large-scale results: the contribution is the framework, the analysis, four falsifiable
-hypotheses, and the protocol needed to test them.
+hypotheses, and the protocol needed to test them. A CPU pilot of the capacity track, at toy widths $n\le4096$ with
+synthetic keys and no trained encoder, only characterises regimes: a raw positive Hebbian state plateaus; centred
+Hebbian and delta-rule states with random keys scale with fitted exponents $0.86$--$0.94$; and correlated or clustered
+keys at fixed correlation give flat capacity, which is a different regime from the $\sqrt n$ worst case.
 \end{abstract}
 
 % ==================================================================
@@ -102,12 +105,19 @@ refuted.
 limitations\PS{} from inferred gaps\IN.
 \item \textbf{A preregistered matched-compute protocol (\cref{sec:protocol})} with five tracks E1--E5, an ablation
 ladder with a byte-transfer control (\cref{fig:ladder}), Pareto reporting, and a negative-results policy.
+\item \textbf{A toy capacity pilot of E2 (\cref{fig:capacity}, \cref{app:probes} P5), labelled PILOT.} A regime
+characterisation of the memory rule alone at $n\le4096$. It is supporting evidence for the protocol's design, not a
+test of H1 or of BDH Claim~7.
 \end{enumerate}
 
 \paragraph{Scope.} This is a framework, analysis, and protocol paper. We do \emph{not} claim ARC-AGI parity with
 BDH-CQ, scaling to hundreds of billions of parameters, or a solution to the no-backpropagation-through-time gap
 of \citet[\S7.2]{kosowski2025bdh}. Small CPU smoke tests of our code are confined to \cref{app:probes} and support
-no claim in the main text.
+no claim in the main text. The one empirical statement we make in the main text is the E2 PILOT
+(\cref{fig:capacity}). It is scoped to \emph{regime characterisation at toy width $n\le4096$} ($d=32$, synthetic
+k-WTA keys, closed-set recall, 3 seeds). We do \textbf{not} claim (i)~general $\tilde O(n)$ or $\tilde\Omega(\sqrt n)$
+capacity for BDH or any trained model, (ii)~any result of a Transformer-matched (parameter-, token-, or FLOP-matched)
+bakeoff, or (iii)~anything about the behaviour of states driven by trained encoders.
 
 % ==================================================================
 \section{Background and Related Work}
@@ -246,7 +256,9 @@ parameter bytes are omitted.}
 
 \paragraph{Capacity.} Interference in a linear associative state grows with key overlap. BDH Claim~7 gives
 $\tilde O(n)$ separable facts for non-adversarial keys and $\tilde\Omega(\sqrt n)$ in the worst case; to our
-knowledge it has not been measured on recall benchmarks \citep{arora2023zoology}. This becomes H1 and E2.
+knowledge it has not been measured on recall benchmarks \citep{arora2023zoology}. This becomes H1 and E2. A toy
+PILOT (\cref{fig:capacity}) suggests that which regime appears depends on the write rule and on how key correlation
+is parameterised, and not only on $n$.
 
 \subsection{Single-timescale states couple retention and interference}
 \label{sec:coupling}
@@ -393,6 +405,16 @@ At matched state bytes, recall accuracy of a positive, sparse, high-$n$ Hebbian 
 stored pairs $N$ at a rate consistent with $\tilde O(n)$ capacity for random keys and degrades toward
 $\tilde\Omega(\sqrt n)$ for correlated keys (BDH Claim~7). The delta variant beats the Hebbian variant on correlated keys.
 \end{hypothesis}
+\begin{remark}[H1 after the PILOT; hypothesis unchanged]\label{rem:h1pilot}
+H1 is kept as preregistered. The toy pilot (\cref{fig:capacity}) gives three refinements to test at scale. They are
+not findings. (a)~A \emph{raw} positive Hebbian state with a fixed active fraction plateaus
+($N_{50}\approx530$--$600$ for $n\ge512$), because the common-mode overlap of positive keys does not shrink with $n$.
+(b)~A \emph{centred} Hebbian or \emph{delta-rule} write with random keys gives fitted exponents of $0.86\pm0.01$ and
+$0.94\pm0.01$. (c)~Correlated keys with a \emph{fixed} correlation $\rho$ as $n$ grows, or clustered keys, give flat
+$N_{50}$ (exponent $\approx0$) whenever the rule cannot remove the shared structure. This is \emph{not} the
+$\tilde\Omega(\sqrt n)$ regime, which assumes a different key model, so the pilot neither confirms nor refutes the
+worst-case half of Claim~7.
+\end{remark}
 \begin{hypothesis}[Dual timescale]\label{h:dual}
 On interleaved task streams, \cdlr{} lowers forgetting relative to every single-state model with the same total
 bytes, including input-gated SSMs, at no more than a fixed relative loss in plasticity. The gain disappears when the
@@ -441,7 +463,48 @@ recall \citep{arora2023zoology} with $N$ swept until failure at $n\in\{2^{12},\d
 Keys i.i.d.\ and with controlled correlation. We fit $N_{50}(n)$, the $N$ at 50\% recall, and test whether its
 exponent is near 1 (random keys) or $\tfrac12$ (correlated keys). Length generalisation: train at $T$, test at
 $2T$--$16T$ on recall, copying \citep{jelassi2024repeat}, and RULER-style needles \citep{hsieh2024ruler}, with BDH's
-damping ablated.
+damping ablated. \Cref{fig:capacity} shows a PILOT of the capacity sweep at toy width only ($n\le4096$, one to four
+octaves below the preregistered range). The pilot was used to check the analysis pipeline and to choose the key
+families. Preregistered E2 still needs trained encoders, MQAR, and matched-byte baselines.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{loglogaxis}[
+  width=0.80\linewidth, height=5.8cm,
+  xlabel={state width $n$}, ylabel={$N_{50}$ (stored pairs at 50\% recall)},
+  log basis x=2, xmin=48, xmax=5600, ymin=3, ymax=20000,
+  legend columns=2, legend style={font=\scriptsize,at={(0.5,1.03)},anchor=south,draw=none,/tikz/every even column/.append style={column sep=6pt}},
+  tick label style={font=\footnotesize}, label style={font=\small},
+  every axis plot/.append style={thick,mark size=1.6pt},
+  unbounded coords=discard]
+\addplot[blue!70!black,mark=*] table[x=n,y=hebc_random]{data/n50_plot.dat};
+\addlegendentry{centred Hebbian, random}
+\addplot[teal,mark=square*] table[x=n,y=delta_random]{data/n50_plot.dat};
+\addlegendentry{delta rule, random}
+\addplot[blue!70!black,dashed,mark=o] table[x=n,y=hebc_c05]{data/n50_plot.dat};
+\addlegendentry{centred Hebbian, $\rho{=}0.5$}
+\addplot[red!70!black,mark=triangle*] table[x=n,y=hebbian_random]{data/n50_plot.dat};
+\addlegendentry{raw positive Hebbian, random}
+\addplot[red!70!black,dashed,mark=triangle] table[x=n,y=hebbian_c05]{data/n50_plot.dat};
+\addlegendentry{raw positive Hebbian, $\rho{=}0.5$}
+\addplot[gray,mark=diamond*] table[x=n,y=hebc_clustered]{data/n50_plot.dat};
+\addlegendentry{centred Hebbian, clustered}
+\addplot[black,thin,dotted,domain=64:4096,samples=2,forget plot] {2*x};
+\node[font=\scriptsize,rotate=26] at (axis cs:200,620) {slope 1};
+\addplot[black,thin,dashdotted,domain=64:4096,samples=2,forget plot] {12*sqrt(x)};
+\node[font=\scriptsize,rotate=14] at (axis cs:1800,320) {slope $\tfrac12$};
+\end{loglogaxis}
+\end{tikzpicture}
+\caption{\textbf{PILOT (toy scale; not a test of H1 or Claim~7).} E2 capacity probe of the memory rule alone:
+fixed $n\times d$ state, $d=32$, $n=64$--$4096$, synthetic positive k-WTA keys (active fraction $1/16$),
+Rademacher values, closed-set recall, 3 seeds, CPU; no trained encoder and no Transformer baseline. Points are
+measured; reference lines are guides. Regimes: raw positive Hebbian \emph{plateaus} ($N_{50}\approx550$ for
+$n\ge512$). Centred Hebbian and delta rule with random keys have fitted slopes $0.86\pm0.01$ and $0.94\pm0.01$.
+Fixed-$\rho$ correlated keys under the raw rule, and clustered keys, stay \emph{flat}. This is a different regime
+from $\sqrt n$, and no slope-$\tfrac12$ curve appeared. Numbers: \cref{tab:p5}.}
+\label{fig:capacity}
+\end{figure}
 
 \paragraph{E3. Ablation ladder (\cref{fig:ladder}).} Each rung adds one component at fixed bytes and FLOPs, from
 plain linear attention to full \cdlr. A \emph{byte-transfer control} at rung (g) gives the bank's bytes to a larger
@@ -544,7 +607,8 @@ Scaling ``1B to 600B'' (\S9.2) & No figure, table, or numbers & \IN{} Unsupporte
 \end{table}
 
 \paragraph{Open problems.} (1)~\emph{Measured capacity}: does BDH-GPU's high-$n$ positive state reach Claim~7's regime,
-and beat gated/delta models at equal \emph{bytes}? (E2) (2)~\emph{Which ingredient matters}: positivity, sparsity,
+and beat gated/delta models at equal \emph{bytes}? (E2; the toy PILOT in \cref{fig:capacity} suggests that a raw positive
+state needs centring or an error-correcting write to scale at all. This is untested with trained encoders.) (2)~\emph{Which ingredient matters}: positivity, sparsity,
 high $n$, weight sharing, or damping? No published experiment isolates these. (E3) (3)~\emph{Interference}: merging by
 concatenation and continual adaptation both need a mechanism that keeps tasks apart, which decay alone cannot provide
 (\cref{prop:coupling}; E4). (4)~\emph{Latent reasoning without a proprietary pipeline}: how much ARC performance survives
@@ -573,7 +637,9 @@ task-boundary/novelty signal or a labelled support set, and the unsupervised gat
 richer analysis. (iii)~\cdlr{} adds hyperparameters ($M,\tau,\beta,\gamma,R,c$) that could absorb tuning budget, hence
 P2. (iv)~Meta-training uses BPTT across demonstrations. (v)~The BDH-CQ audit relies on its text alone, because the
 system is closed. (vi)~Positive sparse codes and slot-structured memory give audit signals (which neurons wrote,
-which slot was read, how many steps ran), not explanations.
+which slot was read, how many steps ran), not explanations. (vii)~The E2 PILOT is a regime characterisation at
+toy width ($n\le4096$, synthetic keys). It does not extrapolate to $n=32{,}768$, to trained encoders, or to
+matched-compute comparisons with Transformers.
 
 % ==================================================================
 \section{Conclusion}
@@ -595,7 +661,8 @@ for consolidated episodes, and support rollback. Bounded-memory inference can lo
 but only above $T^\star$, and this should be measured, not assumed.
 
 \paragraph{Code availability.} An anonymized archive with the protocol code, configurations, the frozen
-preregistration (\texttt{prereg/e1\_e5\_protocol\_v0.json}), and smoke-test logs is provided as supplementary
+preregistration (\texttt{prereg/e1\_e5\_protocol\_v0.json}), smoke-test logs, and the E2 PILOT script and raw
+results (\texttt{e2\_capacity/}) is provided as supplementary
 material; a public repository link will be added in the camera-ready version.
 
 \bibliography{references}
@@ -603,7 +670,7 @@ material; a public repository link will be added in the camera-ready version.
 
 % ==================================================================
 \appendix
-\section{Preliminary Smoke Tests (Not Main Results)}
+\section{Preliminary Smoke Tests and the E2 PILOT (Not Main Results)}
 \label{app:probes}
 
 \textbf{Status.} Single-machine CPU runs on synthetic toy tasks with $5\times10^4$ to $1.6\times10^6$ parameters. They
@@ -632,6 +699,45 @@ support set at evaluation, which is a task-identity signal, so this probe does n
 took $12\times$ the wall time, and the baselines were still on an early plateau: the comparison is not matched and
 supports no ranking. In a toy Tiny-\cdlr{} vs.\ Transformer recall comparison, the undertrained Transformer was far less
 accurate (0.25 vs.\ 1.00) but $28\times$ faster and used less memory at this context length.
+
+\paragraph{P5 [PILOT]: Toy capacity sweep (E2; \cref{fig:capacity}).} We used a fixed $n\times d$ state ($d=32$,
+$n=64$--$4096$) with write $\Sm=\sum_i\phi(k_i)v_i^\top$ and read $q^\top\Sm/q^\top z$ ($\lambda=\eta=1$, no decay).
+There were three rules. \emph{raw} is the positive outer product. \emph{centred} subtracts the batch-mean key
+before write and read. \emph{delta} is a sequential normalised delta rule ($n\le2048$, $N\le16n$). Keys were
+positive and k-WTA sparse (active fraction $1/16$): i.i.d.\ (\emph{random}), $\sqrt\rho\,$shared$\,+\sqrt{1-\rho}\,$private
+(\emph{corr}~$\rho$, with $\rho$ \emph{fixed} as $n$ grows), or 8 centres plus noise (\emph{clustered}). Values were
+Rademacher in $\R^{32}$, and recall was argmax over the $N$ stored values. $N$ was swept on a quarter-octave grid.
+$N_{50}$ is log-linearly interpolated, and the slope is a least-squares fit of $\log N_{50}$ on $\log n$
+(3 seeds; about 41\,s on 8 CPU threads).
+\begin{table}[h]
+\centering\small
+\caption{P5 [PILOT] $N_{50}$ (mean over 3 seeds) and fitted exponent ($\pm$ s.e.). ``--'': not run (delta at $n=4096$).}
+\label{tab:p5}
+\begin{tabular}{@{}llrrrrrl@{}}
+\toprule
+rule & keys & $n{=}64$ & 256 & 1024 & 2048 & 4096 & exponent \\
+\midrule
+raw Hebbian & random & 160 & 351 & 564 & 596 & 532 & $0.29\pm0.07$ (plateau) \\
+raw Hebbian & corr 0.5 & 27 & 27 & 36 & 34 & 43 & $0.14\pm0.04$ (flat) \\
+centred & random & 196 & 682 & 2208 & 3958 & 7172 & $\mathbf{0.86\pm0.01}$ \\
+centred & corr 0.2 & 109 & 420 & 1267 & 2317 & 4148 & $0.86\pm0.02$ \\
+centred & corr 0.5 & 60 & 233 & 775 & 1412 & 2514 & $0.88\pm0.02$ \\
+centred & corr 0.8 & 42 & 159 & 511 & 905 & 1626 & $0.88\pm0.01$ \\
+centred & clustered & 66 & 83 & 84 & 78 & 86 & $0.04\pm0.02$ (flat) \\
+delta & random & 103 & 398 & 1430 & 2688 & -- & $\mathbf{0.94\pm0.01}$ \\
+delta & corr 0.5 & 25 & 112 & 472 & 846 & -- & $1.01\pm0.03$ \\
+delta & corr 0.8 & 5 & 5 & 6 & 4 & -- & $-0.02\pm0.06$ (flat) \\
+delta & clustered & 36 & 43 & 37 & 35 & -- & $0.05\pm0.08$ (flat) \\
+\bottomrule
+\end{tabular}
+\end{table}
+\emph{Reading (regime characterisation only).} Every curve has an exponent near 1 or near 0. Which one appears
+depends on whether the write rule can remove the key-correlation structure. A single shared direction is removed
+by centring, at a constant-factor cost of $2$--$4.5\times$. Several shared directions (clustered keys) are not
+removed, and neither is $\rho=0.8$ under the delta rule. Because $\rho$ is held fixed as $n$ grows, the flat curves
+are a different regime from the $\tilde\Omega(\sqrt n)$ worst case, and they do not refute it. The largest widths
+reach $N_{50}/n=1.75$ (centred, $n=4096$) and $1.31$ (delta, $n=2048$). These figures come from toy width, synthetic
+keys, and no encoder, and they do not establish general capacity at any scale.
 
 \section{Reporting Checklist for Architecture Bakeoffs}
 \label{app:checklist}
