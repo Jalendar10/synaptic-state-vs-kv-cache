@@ -1,0 +1,204 @@
+{
+ "meta": {
+  "mode": "smoke",
+  "grid": {
+   "n": [
+    128
+   ],
+   "K": [
+    32
+   ],
+   "alpha": [
+    1.0
+   ],
+   "lams": [
+    1.0,
+    0.99
+   ],
+   "seeds": [
+    0,
+    1
+   ],
+   "T": 4,
+   "M": 2,
+   "r": 2
+  },
+  "wall_s": 0.7723324298858643,
+  "torch": "2.14.1+cpu",
+  "python": "3.13.5",
+  "threads": 8,
+  "constants": {
+   "D_IN": 64,
+   "D_C": 64,
+   "D_V": 32,
+   "FRAC": 0.0625,
+   "SIGMA": 0.1,
+   "TAU": 0.5
+  },
+  "selection": "lambda chosen on seed 0 by overall acc; metrics are held-out seeds",
+  "status": "TOY PILOT: training-free memory rules, fixed random encoder, synthetic task"
+ },
+ "summary": [
+  {
+   "rung": "a_linattn",
+   "n": 128,
+   "K": 32,
+   "alpha": 1.0,
+   "T": 4,
+   "M": 2,
+   "lam_selected": 0.99,
+   "state_bytes": 16896,
+   "width": 128,
+   "plasticity": 0.03125,
+   "plasticity_sd": 0.0,
+   "retention": 0.03125,
+   "retention_sd": 0.0,
+   "overall": 0.03125,
+   "overall_sd": 0.0,
+   "overall_wilson95": [
+    0.012218067575115642,
+    0.07759880357936064
+   ],
+   "n_test_seeds": 1,
+   "chance": 0.03125
+  },
+  {
+   "rung": "a_linattn_delta",
+   "n": 128,
+   "K": 32,
+   "alpha": 1.0,
+   "T": 4,
+   "M": 2,
+   "lam_selected": 1.0,
+   "state_bytes": 16896,
+   "width": 128,
+   "plasticity": 0.03125,
+   "plasticity_sd": 0.0,
+   "retention": 0.041666666666666664,
+   "retention_sd": 0.0,
+   "overall": 0.0390625,
+   "overall_sd": 0.0,
+   "overall_wilson95": [
+    0.0167983630559502,
+    0.08818822691261814
+   ],
+   "n_test_seeds": 1,
+   "chance": 0.03125
+  },
+  {
+   "rung": "b_hebb_raw",
+   "n": 128,
+   "K": 32,
+   "alpha": 1.0,
+   "T": 4,
+   "M": 2,
+   "lam_selected": 1.0,
+   "state_bytes": 16896,
+   "width": 128,
+   "plasticity": 0.4375,
+   "plasticity_sd": 0.0,
+   "retention": 0.21875,
+   "retention_sd": 0.0,
+   "overall": 0.2734375,
+   "overall_sd": 0.0,
+   "overall_wilson95": [
+    0.2036688607326718,
+    0.3564092936586585
+   ],
+   "n_test_seeds": 1,
+   "chance": 0.03125
+  },
+  {
+   "rung": "b_hebb_delta",
+   "n": 128,
+   "K": 32,
+   "alpha": 1.0,
+   "T": 4,
+   "M": 2,
+   "lam_selected": 1.0,
+   "state_bytes": 16896,
+   "width": 128,
+   "plasticity": 0.90625,
+   "plasticity_sd": 0.0,
+   "retention": 0.28125,
+   "retention_sd": 0.0,
+   "overall": 0.4375,
+   "overall_sd": 0.0,
+   "overall_wilson95": [
+    0.35462168452480924,
+    0.5240205649624543
+   ],
+   "n_test_seeds": 1,
+   "chance": 0.03125
+  },
+  {
+   "rung": "c_dual",
+   "n": 128,
+   "K": 32,
+   "alpha": 1.0,
+   "T": 4,
+   "M": 2,
+   "lam_selected": 1.0,
+   "state_bytes": 50688,
+   "width": 128,
+   "plasticity": 0.90625,
+   "plasticity_sd": 0.0,
+   "retention": 0.65625,
+   "retention_sd": 0.0,
+   "overall": 0.71875,
+   "overall_sd": 0.0,
+   "overall_wilson95": [
+    0.6353641980095492,
+    0.7893879287850285
+   ],
+   "n_test_seeds": 1,
+   "chance": 0.03125
+  },
+  {
+   "rung": "d_bytes_raw",
+   "n": 128,
+   "K": 32,
+   "alpha": 1.0,
+   "T": 4,
+   "M": 2,
+   "lam_selected": 1.0,
+   "state_bytes": 50688,
+   "width": 384,
+   "plasticity": 0.28125,
+   "plasticity_sd": 0.0,
+   "retention": 0.21875,
+   "retention_sd": 0.0,
+   "overall": 0.234375,
+   "overall_sd": 0.0,
+   "overall_wilson95": [
+    0.16939254101487963,
+    0.3148370193059903
+   ],
+   "n_test_seeds": 1,
+   "chance": 0.03125
+  },
+  {
+   "rung": "d_bytes_delta",
+   "n": 128,
+   "K": 32,
+   "alpha": 1.0,
+   "T": 4,
+   "M": 2,
+   "lam_selected": 1.0,
+   "state_bytes": 50688,
+   "width": 384,
+   "plasticity": 1.0,
+   "plasticity_sd": 0.0,
+   "retention": 0.8020833333333334,
+   "retention_sd": 0.0,
+   "overall": 0.8515625,
+   "overall_sd": 0.0,
+   "overall_wilson95": [
+    0.7797712148689779,
+    0.902866131765165
+   ],
+   "n_test_seeds": 1,
+   "chance": 0.03125
+  }
+ ]
+}
